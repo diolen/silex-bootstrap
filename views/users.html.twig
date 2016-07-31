@@ -1,0 +1,33 @@
+{% extends layout %}
+
+{% block content %}
+
+    <div class="container">
+
+        {% include 'jumbotron.html' %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>username</th>
+                    <th>author</th>
+                    <th>email</th>
+                    <th>phone</th>
+                    <th>website</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ user.website }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
