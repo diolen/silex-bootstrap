@@ -12,6 +12,9 @@ require_once __DIR__ . "/../src/json2csv.php";
 
 // INITIALIZE APPLICATION
 $app = new Silex\Application();
+$app['debug'] = true;
+$app['rest'] = new Rest();
+$app['rest_url'] = 'https://jsonplaceholder.typicode.com';
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__ . "/../views"
@@ -29,13 +32,9 @@ $app->get('/', function() use ($app) {
     return $app['twig']->render('index.html.twig');
 });
 
-$app['debug'] = true;
-
 // Display userlist page
 $app->get('/users', function() use($app) {
-    $rest = new Rest();
-    $url = 'https://jsonplaceholder.typicode.com/users';
-    $users = json_decode($rest->url($url)->get());
+    $users = json_decode($app['rest']->url($app['rest_url'] . '/users')->get());
    return $app['twig']->render('users.html.twig', array(
        'users' => $users
    ));
@@ -43,10 +42,8 @@ $app->get('/users', function() use($app) {
 
 // Download CSV file
 $app->get('/getcsv', function() use($app) {
-    $rest = new Rest();
     $csv = new JSON2CSVutil();
-    $url = 'https://jsonplaceholder.typicode.com/users';
-    $csv->dataArray = json_decode($rest->url($url)->get(), true);
+    $csv->dataArray = json_decode($app['rest']->url($app['rest_url'] . '/users')->get(), true);
     $csv->flattenDL('users.csv');
     exit;
 });
